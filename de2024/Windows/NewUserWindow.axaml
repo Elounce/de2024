@@ -1,0 +1,22 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="de2024.Windows.NewUserWindow"
+        Title="NewUser"
+        SizeToContent="WidthAndHeight">
+    
+    <StackPanel Spacing="5" Margin="15" Width="600">
+        <TextBlock>Добавление нового сотрудника</TextBlock>
+        <TextBox Name="MiddleName" Watermark="Фамилия"></TextBox>
+        <TextBox Name="FirstName" Watermark="Имя"></TextBox>
+        <TextBox Name="LastName" Watermark="Отчество"></TextBox>
+        <ComboBox Name="Gender"></ComboBox>
+        <ComboBox Name="Role"></ComboBox>
+        <TextBox Name="Login" Watermark="Логин"></TextBox>
+        <TextBox Name="Password" Watermark="Пароль"></TextBox>
+        <Button Click="AddNewUser">Добавить</Button>
+    </StackPanel>
+    
+</Window>
