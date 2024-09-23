@@ -2,8 +2,28 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:de2024="clr-namespace:de2024"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="de2024.TechnicianWindow"
-        Title="TechnicianWindow">
-    Welcome to Avalonia!
+        Title="TechnicianWindow"
+        x:DataType="de2024:TechnicianWindow">
+    
+    <ListBox Name="ListBox"  ItemsSource="{Binding order}">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <Border BorderThickness="1"
+                        BorderBrush="Crimson"
+                        Margin="75,10,75,0"
+                        Padding="5"
+                        Height="75">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <TextBlock VerticalAlignment="Center" Text="{Binding Nameconference}"/>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding Datecreation}"/>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding Amountguests}"/>
+                        <ComboBox VerticalAlignment="Center" Name="StatusComboBox" Width="200" ItemsSource=""></ComboBox>
+                    </StackPanel>
+                </Border>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ListBox>
 </Window>

@@ -5,7 +5,8 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="de2024.Windows.NewUserWindow"
         Title="NewUser"
-        SizeToContent="WidthAndHeight">
+        SizeToContent="WidthAndHeight"
+        Name="Root">
     
     <StackPanel Spacing="5" Margin="15" Width="600">
         <TextBlock>Добавление нового сотрудника</TextBlock>
@@ -13,7 +14,7 @@
         <TextBox Name="FirstName" Watermark="Имя"></TextBox>
         <TextBox Name="LastName" Watermark="Отчество"></TextBox>
         <ComboBox Name="Gender"></ComboBox>
-        <ComboBox Name="Role"></ComboBox>
+        <ComboBox Name="Roles" ItemsSource="{Binding #Root.userroles}"></ComboBox>
         <TextBox Name="Login" Watermark="Логин"></TextBox>
         <TextBox Name="Password" Watermark="Пароль"></TextBox>
         <Button Click="AddNewUser">Добавить</Button>

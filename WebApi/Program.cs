@@ -27,12 +27,24 @@ app.MapGet("/shifts", () =>
     {
         using (var db = new MkarpovDe2024Context())
         {
-            var shifts = db.Users.ToList();
+            var shifts = db.Shifts.ToList();
             return Results.Ok(shifts);
         }
     })
     .AllowAnonymous()
     .WithName("GetShifts");
+
+app.MapGet("/orders", () =>
+    {
+        using (var db = new MkarpovDe2024Context())
+        {
+            var orders = db.Orders.ToList();
+            return Results.Ok(orders);
+        }
+    })
+    .AllowAnonymous()
+    .WithName("GetOrders");
+
 
 app.MapGet("/users", () =>
 {

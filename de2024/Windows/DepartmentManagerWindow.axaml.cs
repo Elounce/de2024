@@ -33,6 +33,7 @@ public partial class DepartmentManagerWindow : Window, INotifyPropertyChanged
         InitializeComponent();
         DataContext = this;
         ApiCallback(usersPath);
+        
 
     }
 
@@ -48,8 +49,8 @@ public partial class DepartmentManagerWindow : Window, INotifyPropertyChanged
         {
             using HttpClient httpClient = new HttpClient();
             users = await httpClient.GetFromJsonAsync<ObservableCollection<User>>(_global._url + path);
-            /*ListBox.ItemsSource = users;
-            OnPropertyChanged(nameof(ItemsControl));*/
+            ListBox.ItemsSource = users;
+            /*OnPropertyChanged(nameof(ItemsControl));*/
         }
         catch(Exception ex)
         {
@@ -82,5 +83,10 @@ public partial class DepartmentManagerWindow : Window, INotifyPropertyChanged
     private void ChangeStatus_OnClick(object? sender, RoutedEventArgs e)
     {
         
+    }
+
+    public void ComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        Console.WriteLine(sender.GetType().GetProperty("SelectedItem"));
     }
 }

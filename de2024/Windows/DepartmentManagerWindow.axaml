@@ -34,7 +34,7 @@
                             <TextBlock VerticalAlignment="Center" Text="{Binding Firstname}"/>
                             <TextBlock VerticalAlignment="Center" Text="{Binding Middlename}"/>
                             <TextBlock VerticalAlignment="Center" Text="{Binding Lastname}"/>
-                            <ComboBox VerticalAlignment="Center" Name="StatusComboBox" Width="200" ItemsSource="{Binding #Root.statusList}"></ComboBox>
+                            <ComboBox VerticalAlignment="Center" Width="200" SelectionChanged="ComboBox_OnSelectionChanged" SelectedItem="{Binding #Root.statusList[0]}" ItemsSource="{Binding #Root.statusList}"></ComboBox>
                             <Button Click="ChangeStatus_OnClick">Обновить статус</Button>
                         </StackPanel>
                     </Border>

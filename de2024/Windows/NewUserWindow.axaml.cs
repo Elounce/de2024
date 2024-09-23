@@ -16,7 +16,7 @@ namespace de2024.Windows;
 public partial class NewUserWindow : Window
 {
     public User user;
-    public ObservableCollection<Userrole> userroles { get; set; }
+    public ObservableCollection<Userrole>? userroles { get; set; }
     
     private List<string> _genderList = ["Мужской","Женский","Другой"];
     private List<string> _roleList { get; set; }
@@ -25,11 +25,8 @@ public partial class NewUserWindow : Window
     
     public NewUserWindow()
     {
-        ApiCallbackRoles();
-        /*MakeRoles();*/
-        
         InitializeComponent();
-        
+        _ = GetRoles();
         Gender.ItemsSource = _genderList;
         
         /*if (userroles == null)
@@ -44,18 +41,11 @@ public partial class NewUserWindow : Window
         }*/
     }
 
-    private async Task ApiCallbackRoles()
+    private async Task GetRoles()
     {
         using HttpClient httpClient = new HttpClient();
         userroles = await httpClient.GetFromJsonAsync<ObservableCollection<Userrole>>(_global._url + "/roles");
-    }
-
-    public void MakeRoles()
-    {
-        foreach (var role in userroles)
-        {
-            _roleList.Add(role.Namerole);
-        }
+        Roles.ItemsSource = userroles;
     }
 
     public async Task<HttpStatusCode> ApiPost(User user)
@@ -79,7 +69,7 @@ public partial class NewUserWindow : Window
             Middlename = MiddleName.Text,
             Firstname = FirstName.Text,
             Lastname = LastName.Text,
-            Userroleid = Role.SelectedIndex + 1,
+            Userroleid = Roles.SelectedIndex + 1,
             Login = Login.Text,
             Password = Password.Text
         };
