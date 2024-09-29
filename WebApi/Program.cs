@@ -45,6 +45,24 @@ app.MapGet("/orders", () =>
     .AllowAnonymous()
     .WithName("GetOrders");
 
+app.MapPost("/orders/", async (HttpRequest request) =>
+    {
+        using (var db = new MkarpovDe2024Context())
+        {
+            var order = await request.ReadFromJsonAsync<Order>();
+        
+            if (order == null)
+                return Results.BadRequest();
+        
+            db.Add(order);
+            db.SaveChanges();
+        
+            return Results.Created($"/orders/{order.Orderid}", order);
+        }
+    })
+    .AllowAnonymous()
+    .WithName("AddOrder");
+
 
 app.MapGet("/users", () =>
 {
