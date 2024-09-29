@@ -4,6 +4,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="de2024.Windows.NewOrderWindow"
-        Title="NewOrderWindow">
-    Welcome to Avalonia!
+        Title="Новый заказ"
+        SizeToContent="WidthAndHeight"
+        Name="Root">
+    
+    <StackPanel Spacing="5" Margin="15" Width="600">
+        <TextBlock>Добавление нового заказа</TextBlock>
+        <TextBox Name="NameConferance" Watermark="Название"></TextBox>
+        <DatePicker Name="Time"></DatePicker>
+        <TextBox Name="AmountGuests" Watermark="Количество гостей"></TextBox>   
+        <TextBox Name="Equipment" Watermark="Оборудование"></TextBox>
+        <TextBox Name="PaymentStatus" Watermark="Статус оплаты"></TextBox>
+        <Button Click="AddNewOrder">Добавить</Button>
+    </StackPanel>
 </Window>

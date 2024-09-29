@@ -15,6 +15,10 @@ public partial class TechnicianWindow : Window
     public ObservableCollection<Order>? order { get; set; }
     private Global _global = new Global();
     
+    /// <summary>
+    /// TODO: Сделать изменение статуса заказа.
+    /// </summary>
+    
     public TechnicianWindow()
     {
         DataContext = this;

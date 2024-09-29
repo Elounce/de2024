@@ -2,12 +2,43 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:de2024.Model"
         xmlns:de2024="clr-namespace:de2024"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="de2024.DepartmentManagerWindow"
         Title="Заведущий отделением"
         x:Name="Root"
         x:DataType="de2024:DepartmentManagerWindow">
+    
+    <Window.Resources>
+        <DataTemplate x:Key="UsersTemplate" x:DataType="{x:Type local:User}">
+            <Border BorderThickness="1"
+                    BorderBrush="Crimson"
+                    Margin="75,10,75,0"
+                    Padding="5"
+                    Height="75">
+                <StackPanel Name="StackPanel" Orientation="Horizontal" Spacing="5">
+                    <TextBlock VerticalAlignment="Center" Text="{Binding Firstname}"/>
+                    <TextBlock VerticalAlignment="Center" Text="{Binding Middlename}"/>
+                    <TextBlock VerticalAlignment="Center" Text="{Binding Lastname}"/>
+                    <TextBlock VerticalAlignment="Center">Работает: </TextBlock>
+                    <CheckBox PropertyChanged="CheckBox_OnPropertyChanged" IsChecked="{Binding Status.Length}"></CheckBox>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="ShiftsTemplate" x:DataType="{x:Type local:Shift}">
+            <Border BorderThickness="1"
+                    BorderBrush="Crimson"
+                    Margin="75,10,75,0"
+                    Padding="5"
+                    Height="75">
+                <StackPanel Name="StackPanel" Orientation="Horizontal" Spacing="5">
+                    <TextBlock VerticalAlignment="Center" Text="{Binding Datestart}"/>
+                    <TextBlock VerticalAlignment="Center" Text="{Binding Dateend}"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+    </Window.Resources>
     
     <Grid RowDefinitions="50, *">
         <Border Grid.Row="0" 
@@ -17,37 +48,16 @@
             <StackPanel Orientation="Horizontal" Spacing="5">
                 <Button Click="SetUsers_OnClick">Сотрудники</Button>
                 <Button>Заказы</Button>
-                <Button>Смены</Button>
-                <Button Background="ForestGreen" Opacity="50" Click="OpenNewUserWindow">Добавить</Button>
+                <Button Click="SetShifts_Onclick">Смены</Button>
+                <Button Name="AddButton" Background="ForestGreen" Opacity="50" Click="OpenNewUserWindow">Добавить</Button>
             </StackPanel> 
         </Border>
         
-        <ListBox Grid.Row="1" Name="ListBox" ItemsSource="{Binding users}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Border BorderThickness="1"
-                            BorderBrush="Crimson"
-                            Margin="75,10,75,0"
-                            Padding="5"
-                            Height="75">
-                        <StackPanel Orientation="Horizontal" Spacing="5">
-                            <TextBlock VerticalAlignment="Center" Text="{Binding Firstname}"/>
-                            <TextBlock VerticalAlignment="Center" Text="{Binding Middlename}"/>
-                            <TextBlock VerticalAlignment="Center" Text="{Binding Lastname}"/>
-                            <ComboBox VerticalAlignment="Center" Width="200" SelectionChanged="ComboBox_OnSelectionChanged" SelectedItem="{Binding #Root.statusList[0]}" ItemsSource="{Binding #Root.statusList}"></ComboBox>
-                            <Button Click="ChangeStatus_OnClick">Обновить статус</Button>
-                        </StackPanel>
-                    </Border>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
+        <ListBox Grid.Row="1" 
+                 Name="ListBox" 
+                 ItemTemplate="{StaticResource UsersTemplate}" 
+                 ItemsSource="{Binding users}">
         </ListBox>
-        
-        
-        <!--<DataGrid Grid.Row="1" Name="DataGrid" ItemsSource="{Binding users}"
-                  AutoGenerateColumns="True" IsReadOnly="True"
-                  GridLinesVisibility="All"
-                  BorderThickness="1" BorderBrush="Gray">
-        </DataGrid>-->
         
     </Grid>
 </Window>

@@ -7,7 +7,11 @@ public class Order
 {
     public int Orderid { get; set; }
 
-    public DateTime Datecreation { get; set; }
+    public DateTime Datecreation
+    {
+        get;
+        set;
+    } 
 
     public string Orderstatus { get; set; } = null!;
 

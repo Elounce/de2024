@@ -6,6 +6,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="de2024.Windows.OrganizerWIndow"
         Title="OrganizerWIndow"
+        x:Name="Root"
         x:DataType="windows:OrganizerWIndow">
     
     <Grid RowDefinitions="50, *">
@@ -13,7 +14,7 @@
                 BorderBrush="Crimson"
                 BorderThickness="1"
                 Padding="5">
-            <StackPanel Orientation="Horizontal" Spacing="5">
+            <StackPanel Orientation="Horizontal" Spacing="10">
                 <Button Background="ForestGreen" Opacity="50" Click="Button_OnClick">Добавить</Button>
             </StackPanel> 
         </Border>
@@ -23,16 +24,19 @@
                 <DataTemplate>
                     <Border BorderThickness="1"
                             BorderBrush="Crimson"
-                            Margin="75,10,75,0"
+                            Margin="50,10,50,0"
                             Padding="5"
                             Height="75">
                         <StackPanel Orientation="Horizontal" Spacing="5">
-                            <TextBlock VerticalAlignment="Center" Text="{Binding Nameconference}"/>
-                            <TextBlock VerticalAlignment="Center" Text="{Binding Datecreation}"/>
+                            <TextBlock Width="200" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Nameconference}"/>
+                            <TextBlock VerticalAlignment="Center" Text="{Binding Datecreation, StringFormat='dd.MM.yyyy'}"/>
                             <TextBlock VerticalAlignment="Center" Text="{Binding Amountguests}"/>
-                            <TextBlock VerticalAlignment="Center" Text="{Binding Equipment}"/>
-                            <TextBlock VerticalAlignment="Center" Text="{Binding Paymentstatus}"/>
-                            <ComboBox VerticalAlignment="Center" Name="StatusComboBox" Width="200" ItemsSource=""></ComboBox>
+                            <TextBlock Width="100" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Equipment}"/>
+                            <ComboBox Name="PayStatusComboBox" VerticalAlignment="Center" 
+                                      Width="150"
+                                      Loaded="PayStatusComboBox_OnLoaded"
+                                      ItemsSource="{Binding #Root.paumentStatus}"></ComboBox>
+                            <TextBlock VerticalAlignment="Center" Text="{Binding Orderstatus}"/>
                         </StackPanel>
                     </Border>
                 </DataTemplate>

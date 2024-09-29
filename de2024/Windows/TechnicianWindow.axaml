@@ -15,12 +15,12 @@
                         BorderBrush="Crimson"
                         Margin="75,10,75,0"
                         Padding="5"
-                        Height="75">
-                    <StackPanel Orientation="Horizontal" Spacing="5">
-                        <TextBlock VerticalAlignment="Center" Text="{Binding Nameconference}"/>
-                        <TextBlock VerticalAlignment="Center" Text="{Binding Datecreation}"/>
+                        Height="100">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Width="200" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Nameconference}"/>
+                        <TextBlock VerticalAlignment="Center" Text="{Binding Datecreation, StringFormat='dd.MM.yyyy'}"/>
                         <TextBlock VerticalAlignment="Center" Text="{Binding Amountguests}"/>
-                        <ComboBox VerticalAlignment="Center" Name="StatusComboBox" Width="200" ItemsSource=""></ComboBox>
+                        <ComboBox VerticalAlignment="Center" Name="StatusComboBox" Width="150" ItemsSource=""></ComboBox>
                     </StackPanel>
                 </Border>
             </DataTemplate>
