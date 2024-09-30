@@ -28,17 +28,6 @@ public partial class NewUserWindow : Window
         InitializeComponent();
         _ = GetRoles();
         Gender.ItemsSource = _genderList;
-        
-        /*if (userroles == null)
-        {
-            _messageBox.TextBox.Text = "userrole = null";
-            Close(this);
-        }*/
-        
-        /*foreach (var role in userroles)
-        {
-            Role.Items.Add(role.Namerole);
-        }*/
     }
 
     private async Task GetRoles()

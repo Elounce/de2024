@@ -15,30 +15,33 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = de2024
-build_property.ProjectDir = C:\Users\user\RiderProjects\de2024\de2024\
+build_property.ProjectDir = C:\Users\User\Desktop\de2024\de2024\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 
-[C:/Users/user/RiderProjects/de2024/de2024/App.axaml]
+[C:/Users/User/Desktop/de2024/de2024/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/user/RiderProjects/de2024/de2024/Windows/AuthorizationWindow.axaml]
+[C:/Users/User/Desktop/de2024/de2024/Windows/AuthorizationWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/user/RiderProjects/de2024/de2024/Windows/DepartmentManagerWindow.axaml]
+[C:/Users/User/Desktop/de2024/de2024/Windows/DepartmentManagerWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/user/RiderProjects/de2024/de2024/Windows/MessageBox.axaml]
+[C:/Users/User/Desktop/de2024/de2024/Windows/MessageBox.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/user/RiderProjects/de2024/de2024/Windows/NewOrderWindow.axaml]
+[C:/Users/User/Desktop/de2024/de2024/Windows/NewOrderWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/user/RiderProjects/de2024/de2024/Windows/NewUserWindow.axaml]
+[C:/Users/User/Desktop/de2024/de2024/Windows/NewShiftWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/user/RiderProjects/de2024/de2024/Windows/OrganizerWIndow.axaml]
+[C:/Users/User/Desktop/de2024/de2024/Windows/NewUserWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/user/RiderProjects/de2024/de2024/Windows/TechnicianWindow.axaml]
+[C:/Users/User/Desktop/de2024/de2024/Windows/OrganizerWIndow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/User/Desktop/de2024/de2024/Windows/TechnicianWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

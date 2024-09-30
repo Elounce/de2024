@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -15,13 +16,9 @@ namespace de2024.Windows;
 public partial class OrganizerWIndow : Window
 {
     public ObservableCollection<Order>? order { get; set; }
-    public List<string> paumentStatus { get; set; } = ["Принят", "Не принят"];
+    public List<string> paymentStatus { get; set; } = ["принят", "не принят"];
     private Global _global = new Global();
-    private NewUserWindow _newUserWindow;
-
-    /// <summary>
-    /// TODO: Сделать создание нового заказа и добавить изменение статуса заказа.
-    /// </summary>
+    private NewOrderWindow _newOrderWindow = new NewOrderWindow();
 
     public OrganizerWIndow()
     {
@@ -40,13 +37,38 @@ public partial class OrganizerWIndow : Window
 
     }
 
-    private void Button_OnClick(object? sender, RoutedEventArgs e)
+    public async Task<HttpStatusCode> UpdateOrder(string path, Order order)
     {
-        throw new System.NotImplementedException();
+        try
+        {
+            using HttpClient httpClient = new HttpClient();
+            var content = JsonContent.Create(order);
+            var request = new HttpRequestMessage(HttpMethod.Put, _global._url + path);
+            {
+                request.Content = content;
+            }
+            var response = await httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            
+            return response.StatusCode;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
-    private void PayStatusComboBox_OnLoaded(object? sender, RoutedEventArgs e)
+    private void Button_OnClick(object? sender, RoutedEventArgs e)
     {
-        
+        _newOrderWindow.Show(this);
+    }
+
+    private async void PayStatusComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        Order order = ListBox.SelectedItem as Order;
+
+        if (order != null)
+            await UpdateOrder("/orders/", order);
     }
 }

@@ -2,31 +2,26 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Templates;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Markup.Xaml.Templates;
 using de2024.Model;
-using de2024.Windows;
 
-namespace de2024;
+namespace de2024.Windows;
 
 public partial class DepartmentManagerWindow : Window, INotifyPropertyChanged
 {
     public string usersPath = "/users";
-    public string shiftsPath = "/shifts"; 
+    public string shiftsPath = "/shifts";
+    public int selectedList = 0; // 0 = users, 2 = shifts
     public ObservableCollection<User>? users { get; set; }
     public ObservableCollection<Shift>? shifts { get; set; }
-    public List<string> statusList { get; set; } /*= ["Работает", "Уволен"];*/
-    public string defaultStatus = "Работает";
+    public List<string> statusList { get; set; } = ["Работает", "Уволен"];
     public new event PropertyChangedEventHandler? PropertyChanged;
 
     private readonly Global _global = new Global();
@@ -80,6 +75,28 @@ public partial class DepartmentManagerWindow : Window, INotifyPropertyChanged
             Console.WriteLine(ex.Message);
         }
     }
+
+    private async Task<HttpStatusCode> UpdateUser(string path, User user)
+    {
+        try
+        {
+            using HttpClient httpClient = new HttpClient();
+            var content = JsonContent.Create(user);
+            var request = new HttpRequestMessage(HttpMethod.Put, _global._url + path);
+            {
+                request.Content = content;
+            }
+            var response = await httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            
+            return response.StatusCode;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
     
     public void TestData()
     {
@@ -92,19 +109,21 @@ public partial class DepartmentManagerWindow : Window, INotifyPropertyChanged
 
     public void OpenNewUserWindow(object? sender, RoutedEventArgs e)
     {
-        if(!_newUserWindow.IsLoaded)
-            _newUserWindow.Show(this);
-    }
-    
-    private void CheckBox_OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
-    {
+        switch (selectedList)
+        {
+            case 0:
+                _newUserWindow.Show(this);
+                break;
+            case 2:
+                break;
+        }
         
     }
+    
 
     private void SetShifts_Onclick(object? sender, RoutedEventArgs e)
     {
-        AddButton.IsVisible = false;
-        OnPropertyChanged("AddButton");
+        selectedList = 2;
         ListBox.ItemsSource = shifts;
         ListBox.ItemTemplate = (DataTemplate)Resources["ShiftsTemplate"];
         OnPropertyChanged("ListBox");
@@ -112,10 +131,23 @@ public partial class DepartmentManagerWindow : Window, INotifyPropertyChanged
     
     private void SetUsers_OnClick(object? sender, RoutedEventArgs e)
     {
-        AddButton.IsVisible = true;
-        OnPropertyChanged("AddButton");
+        selectedList = 0;
         ListBox.ItemsSource = users;
         ListBox.ItemTemplate = (DataTemplate)Resources["UsersTemplate"];
         OnPropertyChanged("ListBox");
+    }
+
+    private void StatusChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        User user = ListBox.SelectedItem as User;
+
+        if (user != null)
+            UpdateUser(usersPath, user);
+    }
+
+    private void UpdateData_OnClick(object? sender, RoutedEventArgs e)
+    {
+        GetUsers(usersPath);
+        GetShifts(shiftsPath);
     }
 }

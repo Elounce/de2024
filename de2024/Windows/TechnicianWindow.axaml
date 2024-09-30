@@ -6,9 +6,10 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="de2024.TechnicianWindow"
         Title="TechnicianWindow"
-        x:DataType="de2024:TechnicianWindow">
+        x:DataType="de2024:TechnicianWindow"
+        Name="Root">
     
-    <ListBox Name="ListBox"  ItemsSource="{Binding order}">
+    <ListBox Name="ListBox" ItemsSource="{Binding orders}">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <Border BorderThickness="1"
@@ -20,7 +21,10 @@
                         <TextBlock Width="200" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Nameconference}"/>
                         <TextBlock VerticalAlignment="Center" Text="{Binding Datecreation, StringFormat='dd.MM.yyyy'}"/>
                         <TextBlock VerticalAlignment="Center" Text="{Binding Amountguests}"/>
-                        <ComboBox VerticalAlignment="Center" Name="StatusComboBox" Width="150" ItemsSource=""></ComboBox>
+                        <ComboBox VerticalAlignment="Center" Width="150" 
+                                  ItemsSource="{Binding #Root.orderStatuses}"
+                                  SelectedItem="{Binding Orderstatus}"
+                                  SelectionChanged="OrderStatus_OnSelectionChanged"></ComboBox>
                     </StackPanel>
                 </Border>
             </DataTemplate>

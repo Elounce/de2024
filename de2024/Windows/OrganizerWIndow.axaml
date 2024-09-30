@@ -34,8 +34,9 @@
                             <TextBlock Width="100" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Equipment}"/>
                             <ComboBox Name="PayStatusComboBox" VerticalAlignment="Center" 
                                       Width="150"
-                                      Loaded="PayStatusComboBox_OnLoaded"
-                                      ItemsSource="{Binding #Root.paumentStatus}"></ComboBox>
+                                      ItemsSource="{Binding #Root.paymentStatus}"
+                                      SelectedItem="{Binding Paymentstatus}"
+                                      SelectionChanged="PayStatusComboBox_OnSelectionChanged"></ComboBox>
                             <TextBlock VerticalAlignment="Center" Text="{Binding Orderstatus}"/>
                         </StackPanel>
                     </Border>
