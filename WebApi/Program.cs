@@ -23,6 +23,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+
 app.MapGet("/shifts", () =>
     {
         using (var db = new MkarpovDe2024Context())
@@ -33,6 +34,25 @@ app.MapGet("/shifts", () =>
     })
     .AllowAnonymous()
     .WithName("GetShifts");
+
+app.MapPost("/shifts/", async (HttpRequest request) =>
+{
+    using (var db = new MkarpovDe2024Context())
+    {
+        var shift = await request.ReadFromJsonAsync<Shift>();
+        
+        if (shift == null)
+            return Results.BadRequest();
+
+        db.Add(shift);
+        db.SaveChanges();
+        
+        return Results.Created($"/orders/{shift.Shiftid}", shift);
+    }
+})
+    .AllowAnonymous()
+    .WithName("AddShift");
+
 
 app.MapGet("/orders", () =>
     {
@@ -62,6 +82,24 @@ app.MapPost("/orders/", async (HttpRequest request) =>
     })
     .AllowAnonymous()
     .WithName("AddOrder");
+
+app.MapPut("/orders/", async (HttpRequest request) =>
+{
+    using (var db = new MkarpovDe2024Context())
+    {
+        var order = await request.ReadFromJsonAsync<Order>();
+        
+        if (order == null)
+            return Results.BadRequest();
+
+        db.Update(order);
+        db.SaveChanges();
+        
+        return Results.Created($"/orders/{order.Orderid}", order);
+    }
+})
+.AllowAnonymous()
+.WithName("UpdateOrder");
 
 
 app.MapGet("/users", () =>
@@ -108,6 +146,24 @@ app.MapPost("/users/", async (HttpRequest request) =>
 })
     .AllowAnonymous()
     .WithName("AddUser");
+
+app.MapPut("/users/", async (HttpRequest request) =>
+{
+    using (var db = new MkarpovDe2024Context())
+    {
+        var user = await request.ReadFromJsonAsync<User>();
+        
+        if(user == null)
+            return Results.BadRequest();
+        
+        db.Update(user);
+        db.SaveChanges();
+        
+        return Results.Created($"/users/{user.Userid}", user);
+    }
+})
+    .AllowAnonymous()
+    .WithName("UpdateUser");
 
 app.MapGet("/roles/", () =>
 {
