@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
+using Mysqlx;
 using WebApi.Model;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,17 +24,83 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+var _dbContext = new MkarpovDe2024Context();
 
-app.MapGet("/shifts", () =>
+
+app.MapGet("/usersshifts/", async () =>
+{
+    using (var db = new MkarpovDe2024Context())
+    {
+        return Results.Ok(await db.Userlists
+            .ToListAsync());
+    }
+})
+    .AllowAnonymous()
+    .WithName("UserShifts");
+
+
+app.MapPost("/usersshifts/{shiftId}/{userId}", async (int shiftId, int userId) =>
     {
         using (var db = new MkarpovDe2024Context())
         {
-            var shifts = db.Shifts.ToList();
+            /*var userList = await request.ReadFromJsonAsync<Userlist>();*/
+            
+            var existingUserShift = await db.Userlists
+                .FirstOrDefaultAsync(us => us.Shiftid == shiftId && us.Userid == userId);
+
+            if (existingUserShift != null)
+                return Results.Conflict("Пользователь с таким ID уже добавлен в эту смену.");
+            
+            var userShift = new Userlist()
+            {
+                Shiftid = shiftId,
+                Userid = userId
+            };
+            
+            db.Add(userShift);
+            await db.SaveChangesAsync();
+            
+            return Results.Ok();
+        }
+    })
+    .AllowAnonymous()
+    .WithName("PostUserShift");
+
+
+app.MapGet("/shifts", async () =>
+    {
+        using (var db = new MkarpovDe2024Context())
+        {
+            var shifts = await db.Shifts
+                .ToListAsync();
             return Results.Ok(shifts);
         }
     })
     .AllowAnonymous()
     .WithName("GetShifts");
+
+
+app.MapGet("/shifts/{id}", async (int id) =>
+    {
+        using (var db = new MkarpovDe2024Context())
+        {
+            var shift = await db.Shifts.FindAsync(id);
+            if (shift == null)
+            {
+                return Results.NotFound();
+            }
+
+            var users = await db.Userlists
+                .Where(ul => ul.Shiftid == id)
+                .Select(ul => ul.User)
+                .ToListAsync();
+
+            return Results.Ok(users);  
+        }
+    })
+    .AllowAnonymous()
+    .WithName("GetShiftUsers");
+
 
 app.MapPost("/shifts/", async (HttpRequest request) =>
 {
@@ -51,7 +118,7 @@ app.MapPost("/shifts/", async (HttpRequest request) =>
     }
 })
     .AllowAnonymous()
-    .WithName("AddShift");
+    .WithName("PostShift");
 
 
 app.MapGet("/orders", () =>
@@ -81,7 +148,7 @@ app.MapPost("/orders/", async (HttpRequest request) =>
         }
     })
     .AllowAnonymous()
-    .WithName("AddOrder");
+    .WithName("PostOrder");
 
 app.MapPut("/orders/", async (HttpRequest request) =>
 {
@@ -128,6 +195,15 @@ app.MapGet("/users", () =>
 })
 .AllowAnonymous()
 .WithName("GetUsers");
+
+
+app.MapGet("/users/{login}/{password}", async (string login, string password) =>
+    {
+        return await _dbContext.Users.FirstOrDefaultAsync(
+            u => u.Login == login && u.Password == password);
+    })
+    .WithName("GetUser");
+
 
 app.MapPost("/users/", async (HttpRequest request) =>
 {
