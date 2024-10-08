@@ -11,5 +11,5 @@ public class Shift
 
     public DateTime? Dateend { get; set; }
 
-    /*public virtual ICollection<Userlist> Userlists { get; set; } = new List<Userlist>();*/
+    public virtual ICollection<Userlist> Userlists { get; set; } = new List<Userlist>();
 }

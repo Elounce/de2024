@@ -29,20 +29,28 @@
                 </StackPanel>
             </Border>
         </DataTemplate>
-        <DataTemplate x:Key="ShiftsTemplate" x:DataType="{x:Type local:Shift}">
-            <Border BorderThickness="1"
-                    BorderBrush="Crimson"
-                    Margin="75,10,75,0"
-                    Padding="5"
-                    Height="75">
-                <StackPanel Name="StackPanel" Orientation="Horizontal" Spacing="5">
-                    <TextBlock VerticalAlignment="Center" Text="{Binding Shiftid}"/>
-                    <TextBlock VerticalAlignment="Center">Начало смены: </TextBlock>
-                    <TextBlock VerticalAlignment="Center" Text="{Binding Datestart, StringFormat='dd.mm.yyyy'}"/>
-                    <TextBlock VerticalAlignment="Center">Конец смены: </TextBlock>
-                    <TextBlock VerticalAlignment="Center" Text="{Binding Dateend, StringFormat='dd.mm.yyyy'}"/>
-                </StackPanel>
-            </Border>
+        <DataTemplate x:Key="ShiftsTemplate" x:DataType="{x:Type local:ShiftUsers}">
+            <Grid RowDefinitions="*">
+                <Border BorderThickness="1"
+                        BorderBrush="Crimson"
+                        Margin="75,10,75,0"
+                        Padding="5">
+                    <Grid RowDefinitions="*,*">
+                        <StackPanel Name="StackPanel" Orientation="Horizontal" Spacing="5">
+                            <TextBlock VerticalAlignment="Center" Text="{Binding Shiftid}"/>
+                            <TextBlock VerticalAlignment="Center">Начало смены: </TextBlock>
+                            <TextBlock VerticalAlignment="Center" Text="{Binding Datestart, StringFormat='dd.mm.yyyy'}"/>
+                            <TextBlock VerticalAlignment="Center">Конец смены: </TextBlock>
+                            <TextBlock VerticalAlignment="Center" Text="{Binding Dateend, StringFormat='dd.mm.yyyy'}"/>
+                            <ComboBox VerticalAlignment="Center" SelectionChanged="SelectingItemsControl_OnSelectionChanged" ItemsSource="{Binding #Root.users}"></ComboBox>
+                        </StackPanel>
+                        <ListBox Margin="0, 10, 0 ,0" Grid.Row="2" ItemsSource="{Binding Users}">
+                       
+                        </ListBox>
+                    </Grid>
+                </Border>
+            </Grid>
+            
         </DataTemplate>
     </Window.Resources>
     
@@ -55,7 +63,7 @@
                 <Button Click="SetUsers_OnClick">Сотрудники</Button>
                 <Button>Заказы</Button>
                 <Button Click="SetShifts_Onclick">Смены</Button>
-                <Button Name="AddButton" Background="ForestGreen" Opacity="50" Click="OpenNewUserWindow">Добавить</Button>
+                <Button Name="AddButton" Background="ForestGreen" Opacity="50" Click="AddNewItem">Добавить</Button>
                 <Button Name="UpdateData" Background="ForestGreen" Opacity="50" Click="UpdateData_OnClick">Обновить данные</Button>
             </StackPanel> 
         </Border>
@@ -63,8 +71,9 @@
         <ListBox Grid.Row="1" 
                  Name="ListBox" 
                  ItemTemplate="{StaticResource UsersTemplate}" 
-                 ItemsSource="{Binding users}">
-        </ListBox>
+                 ItemsSource="{Binding users}"
+                 SelectionMode="Single">
+        </ListBox> 
         
     </Grid>
 </Window>

@@ -22,4 +22,11 @@ public class User{
     public int? Userroleid { get; set; }
     
     public virtual Userrole? Userrole { get; set; }
+    
+    public virtual ICollection<Userlist> Userlists { get; set; } = new List<Userlist>();
+
+    public override string ToString()
+    {
+        return $"{Firstname} {Lastname} {Middlename}";
+    }
 }

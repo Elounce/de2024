@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -16,20 +17,22 @@ namespace de2024.Windows;
 
 public partial class DepartmentManagerWindow : Window, INotifyPropertyChanged
 {
-    public string usersPath = "/users";
-    public string shiftsPath = "/shifts";
+    public string usersPath = "/users/";
+    public string shiftsPath = "/shifts/";
+    public string usersShiftsPath = "/usersshifts/";
     public int selectedList = 0; // 0 = users, 2 = shifts
     public ObservableCollection<User>? users { get; set; }
     public ObservableCollection<Shift>? shifts { get; set; }
+    public ObservableCollection<ShiftUsers>? shiftUsers { get; set; }
+    public List<Userlist>? userList { get; set; }
+    public ObservableCollection<Userlist>? usersShifts { get; set; }
+    
     public List<string> statusList { get; set; } = ["Работает", "Уволен"];
     public new event PropertyChangedEventHandler? PropertyChanged;
 
     private readonly Global _global = new Global();
     private readonly NewUserWindow _newUserWindow = new();
-    
-    /// <summary>
-    /// TODO: Доделать список смен и изменение статуса у сотрудников.
-    /// </summary>
+    private readonly NewShiftWindow _newShiftWindow = new();
   
     public DepartmentManagerWindow()
     {
@@ -39,6 +42,7 @@ public partial class DepartmentManagerWindow : Window, INotifyPropertyChanged
         DataContext = this;
         GetUsers(usersPath);
         GetShifts(shiftsPath);
+        GetUsersShifts(usersShiftsPath);
         
     }
 
@@ -68,13 +72,50 @@ public partial class DepartmentManagerWindow : Window, INotifyPropertyChanged
         try
         {
             using HttpClient httpClient = new HttpClient();
-            shifts = await httpClient.GetFromJsonAsync<ObservableCollection<Shift>>(_global._url + path);
+            shiftUsers = await httpClient.GetFromJsonAsync<ObservableCollection<ShiftUsers>>(_global._url + path);
         }
         catch(Exception ex)
         {
             Console.WriteLine(ex.Message);
         }
     }
+
+
+    private async Task GetUsersShifts(string path)
+    {
+        try
+        {
+            using HttpClient httpClient = new HttpClient();
+            usersShifts = await httpClient.GetFromJsonAsync<ObservableCollection<Userlist>>(_global._url + path);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
+        if (Task.CompletedTask.IsCompleted)
+        {
+            Test();
+            OnPropertyChanged("ListBox");
+        }
+    }
+    
+    
+    /*private async Task GetShiftUsers(string path, int id)
+    {
+        try
+        {
+            using HttpClient httpClient = new HttpClient();
+            shiftUsers = await httpClient.GetFromJsonAsync<ObservableCollection<User>>(_global._url + path + id);
+
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+
+        }
+    }*/
 
     private async Task<HttpStatusCode> UpdateUser(string path, User user)
     {
@@ -86,6 +127,29 @@ public partial class DepartmentManagerWindow : Window, INotifyPropertyChanged
             {
                 request.Content = content;
             }
+            var response = await httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            
+            return response.StatusCode; 
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+
+    private async Task<HttpStatusCode> PostShiftUser(string path, int userId, int shiftId)
+    {
+        try
+        {
+            using HttpClient httpClient = new HttpClient();
+            /*var content = JsonContent.Create(userlist);*/
+            var request = new HttpRequestMessage(HttpMethod.Post, _global._url + path + $"{shiftId}/{userId}");
+            /*{
+                request.Content = content;
+            }*/
             var response = await httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             
@@ -107,7 +171,7 @@ public partial class DepartmentManagerWindow : Window, INotifyPropertyChanged
         ];
     }
 
-    public void OpenNewUserWindow(object? sender, RoutedEventArgs e)
+    public void AddNewItem(object? sender, RoutedEventArgs e)
     {
         switch (selectedList)
         {
@@ -115,6 +179,7 @@ public partial class DepartmentManagerWindow : Window, INotifyPropertyChanged
                 _newUserWindow.Show(this);
                 break;
             case 2:
+                _newShiftWindow.Show(this);
                 break;
         }
         
@@ -124,7 +189,7 @@ public partial class DepartmentManagerWindow : Window, INotifyPropertyChanged
     private void SetShifts_Onclick(object? sender, RoutedEventArgs e)
     {
         selectedList = 2;
-        ListBox.ItemsSource = shifts;
+        ListBox.ItemsSource = shiftUsers;
         ListBox.ItemTemplate = (DataTemplate)Resources["ShiftsTemplate"];
         OnPropertyChanged("ListBox");
     }
@@ -135,6 +200,7 @@ public partial class DepartmentManagerWindow : Window, INotifyPropertyChanged
         ListBox.ItemsSource = users;
         ListBox.ItemTemplate = (DataTemplate)Resources["UsersTemplate"];
         OnPropertyChanged("ListBox");
+        
     }
 
     private void StatusChanged(object? sender, SelectionChangedEventArgs e)
@@ -149,5 +215,60 @@ public partial class DepartmentManagerWindow : Window, INotifyPropertyChanged
     {
         GetUsers(usersPath);
         GetShifts(shiftsPath);
+        GetUsersShifts(usersShiftsPath);
+    }
+
+
+    private void Test()
+    {
+        foreach (var us in usersShifts)
+        {
+            
+            var user = users?.First(u => u.Userid == us.Userid);
+            
+            foreach (var su in shiftUsers)
+            {
+                if(us.Shiftid == su.Shiftid)
+                    su.Users.Add(user);
+            }
+        }
+    }
+    
+    
+    /*private void LoadShiftUsers()
+    {
+        if (usersShifts != null)
+            foreach (var us in usersShifts)
+            {
+                var shift = shifts.First(s => s.Shiftid == us.Shiftid);
+                var user = users.First(u => u.Userid == us.Userid);
+                Console.WriteLine($"{shift.Shiftid} {user.Firstname} {user.Middlename} {user.Lastname}");
+
+                userList.Add(new Userlist
+                {
+                    User = user,
+                    Shift = shift
+                });
+            }
+    }*/
+
+    private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        ShiftUsers shift = ListBox.SelectedItem as ShiftUsers;
+        ComboBox comboBox = sender as ComboBox;
+
+        if (comboBox != null && shift != null)
+        {
+            var user = (comboBox.SelectedItem as User);
+
+            var userlist = new Userlist()
+            {
+                Shiftid = shift.Shiftid,
+                Userid = user.Userid
+            };
+            
+            PostShiftUser(usersShiftsPath, user.Userid, shift.Shiftid);
+        }
+        
     }
 }
